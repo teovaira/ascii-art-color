@@ -24,16 +24,7 @@ A6
 A7
 A8`
 	banner := map[rune][]string{
-		'A': {
-			"A1",
-			"A2",
-			"A3",
-			"A4",
-			"A5",
-			"A6",
-			"A7",
-			"A8",
-		},
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -52,26 +43,8 @@ A6B6
 A7B7
 A8B8`
 	banner := map[rune][]string{
-		'A': {
-			"A1",
-			"A2",
-			"A3",
-			"A4",
-			"A5",
-			"A6",
-			"A7",
-			"A8",
-		},
-		'B': {
-			"B1",
-			"B2",
-			"B3",
-			"B4",
-			"B5",
-			"B6",
-			"B7",
-			"B8",
-		},
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -91,26 +64,8 @@ A6  A6
 A7  A7
 A8  A8`
 	banner := map[rune][]string{
-		'A': {
-			"A1",
-			"A2",
-			"A3",
-			"A4",
-			"A5",
-			"A6",
-			"A7",
-			"A8",
-		},
-		' ': {
-			"  ",
-			"  ",
-			"  ",
-			"  ",
-			"  ",
-			"  ",
-			"  ",
-			"  ",
-		},
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+		' ': {"  ", "  ", "  ", "  ", "  ", "  ", "  ", "  "},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -130,26 +85,8 @@ A61A6
 A71A7
 A81A8`
 	banner := map[rune][]string{
-		'A': {
-			"A1",
-			"A2",
-			"A3",
-			"A4",
-			"A5",
-			"A6",
-			"A7",
-			"A8",
-		},
-		'1': {
-			"1",
-			"1",
-			"1",
-			"1",
-			"1",
-			"1",
-			"1",
-			"1",
-		},
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+		'1': {"1", "1", "1", "1", "1", "1", "1", "1"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -168,26 +105,8 @@ func TestSpecialCharacters(t *testing.T) {
 {}
 {}`
 	banner := map[rune][]string{
-		'{': {
-			"{",
-			"{",
-			"{",
-			"{",
-			"{",
-			"{",
-			"{",
-			"{",
-		},
-		'}': {
-			"}",
-			"}",
-			"}",
-			"}",
-			"}",
-			"}",
-			"}",
-			"}",
-		},
+		'{': {"{", "{", "{", "{", "{", "{", "{", "{"},
+		'}': {"}", "}", "}", "}", "}", "}", "}", "}"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -214,26 +133,8 @@ B6
 B7
 B8`
 	banner := map[rune][]string{
-		'A': {
-			"A1",
-			"A2",
-			"A3",
-			"A4",
-			"A5",
-			"A6",
-			"A7",
-			"A8",
-		},
-		'B': {
-			"B1",
-			"B2",
-			"B3",
-			"B4",
-			"B5",
-			"B6",
-			"B7",
-			"B8",
-		},
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
@@ -254,6 +155,34 @@ A7
 A8`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+	}
+	output := RendererASCII(input, banner)
+	if expected != output {
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+	}
+}
+func TestConsecutiveNewlines(t *testing.T) {
+	input := "A\n\nB"
+	expected := `A1
+A2
+A3
+A4
+A5
+A6
+A7
+A8
+
+B1
+B2
+B3
+B4
+B5
+B6
+B7
+B8`
+	banner := map[rune][]string{
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
 	output := RendererASCII(input, banner)
 	if expected != output {
