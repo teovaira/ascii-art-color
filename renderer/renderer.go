@@ -8,7 +8,7 @@ import (
 const bannerHeight = 8
 
 func RendererASCII(input string, banner map[rune][]string) (string, error) {
-	result := ""
+	var result strings.Builder
 	for _, ch := range input {
 		if ch == '\n' {
 			continue
@@ -24,16 +24,16 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	}
 	// Handle special case: input is just empty or just "\n"
 	if len(parts) == 0 || len(parts) == 1 && parts[0] == "" {
-		return result, nil
+		return "", nil
 	}
 	if len(banner) == 0 {
-		return result, fmt.Errorf("banner is empty")
+		return "", fmt.Errorf("banner is empty")
 	}
 
-	for p, line := range parts {
+	for _, line := range parts {
 		// Handle empty lines(from consecutive \n\n)
 		if line == "" {
-			result += "\n"
+			result.WriteString("\n")
 			continue
 		}
 
@@ -45,17 +45,19 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 				if err != nil {
 					return "", err
 				}
-				result += value[i]
+				result.WriteString(value[i])
 			}
-			result += "\n"
+			result.WriteString("\n")
 		}
-		// Don't add extra newline after the last part
-		if p == len(parts)-1 {
-			// Remove the last newline character
-			result = result[:len(result)-1]
-		}
+
 	}
-	return result, nil
+	output := result.String()
+	// Don't add extra newline after the last part
+	if output != "" && output[:len(output)-1] == "\n" {
+		// Remove the last newline character
+		output = output[:len(output)-1]
+	}
+	return output, nil
 }
 func characterValidation(ch rune, banner map[rune][]string) ([]string, error) {
 
