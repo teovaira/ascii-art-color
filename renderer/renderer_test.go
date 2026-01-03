@@ -1,9 +1,11 @@
 // Package renderer contains unit tests for the ASCII renderer.
 // These tests verify that RendererASCII correctly converts input strings
 // into their ASCII-art representations using a provided banner.
-package renderer
+package renderer_test
 
 import (
+	"ascii-art/renderer"
+	"strings"
 	"testing"
 )
 
@@ -12,7 +14,7 @@ import (
 func TestEmptyInput(t *testing.T) {
 	input := ""
 	banner := map[rune][]string{}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 
@@ -38,7 +40,7 @@ A8`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -64,7 +66,7 @@ A8B8`
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -91,7 +93,7 @@ A8  A8`
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		' ': {"  ", "  ", "  ", "  ", "  ", "  ", "  ", "  "},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -118,7 +120,7 @@ A81A8`
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'1': {"1", "1", "1", "1", "1", "1", "1", "1"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -130,27 +132,31 @@ A81A8`
 
 // TestSpecialCharacters verifies rendering of special characters
 // that exist in the banner map.
-func TestSpecialCharacters(t *testing.T) {
-	input := "{}"
-	expected := `{}
-{}
-{}
-{}
-{}
-{}
-{}
-{}`
-	banner := map[rune][]string{
-		'{': {"{", "{", "{", "{", "{", "{", "{", "{"},
-		'}': {"}", "}", "}", "}", "}", "}", "}", "}"},
-	}
-	output, err := RendererASCII(input, banner)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if expected != output {
-		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+func TestAllSpecialCharacters(t *testing.T) {
+	specials := `!"#$%&'()*+,-./:;<=>?@[\]^_{|}~`
 
+	banner := make(map[rune][]string)
+	for _, ch := range specials {
+		banner[ch] = []string{
+			string(ch), string(ch), string(ch), string(ch),
+			string(ch), string(ch), string(ch), string(ch),
+		}
+	}
+
+	output, err := renderer.RendererASCII(specials, banner)
+	if err != nil {
+		t.Fatalf("RendererASCII failed for special characters: %v", err)
+	}
+
+	lines := strings.Split(output, "\n")
+	if len(lines) != 8 {
+		t.Fatalf("expected 8 lines, got %d", len(lines))
+	}
+
+	for i, line := range lines {
+		if len(line) != len(specials) {
+			t.Errorf("line %d: expected %d chars, got %d", i, len(specials), len(line))
+		}
 	}
 }
 
@@ -178,7 +184,7 @@ B8`
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -204,7 +210,7 @@ A8`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -239,7 +245,7 @@ B8`
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -252,7 +258,7 @@ func TestMissigCharaster(t *testing.T) {
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err == nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -267,7 +273,7 @@ func TestCorruptedBanner(t *testing.T) {
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A6", "A7", "A8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err == nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -281,12 +287,42 @@ func TestInvalidCharacters(t *testing.T) {
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := RendererASCII(input, banner)
+	output, err := renderer.RendererASCII(input, banner)
 	if err == nil {
 		t.Fatalf("unexpected error: %v", err)
 
 	}
 	if output != "" {
 		t.Errorf("expected empty output on error, got %q", output)
+	}
+}
+func TestCompleteASCIIRange(t *testing.T) {
+	banner := make(map[rune][]string)
+
+	for ch := rune(32); ch <= 126; ch++ {
+		banner[ch] = []string{
+			"*", "*", "*", "*", "*", "*", "*", "*",
+		}
+	}
+
+	var input strings.Builder
+	for ch := rune(32); ch <= 126; ch++ {
+		input.WriteRune(ch)
+	}
+
+	output, err := renderer.RendererASCII(input.String(), banner)
+	if err != nil {
+		t.Fatalf("RendererASCII failed for ASCII range: %v", err)
+	}
+
+	lines := strings.Split(output, "\n")
+	if len(lines) != 8 {
+		t.Fatalf("expected 8 lines, got %d", len(lines))
+	}
+
+	for i, line := range lines {
+		if len(line) != 95 {
+			t.Errorf("line %d: expected 95 chars, got %d", i, len(line))
+		}
 	}
 }
