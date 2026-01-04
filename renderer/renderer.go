@@ -1,3 +1,12 @@
+// Package renderer provides functionality for converting input text into ASCII art
+// using predefined banner character definitions.
+//
+// The renderer processes printable ASCII characters (range 32–126) and renders each
+// character as an 8-line ASCII representation based on the provided banner map.
+// Newlines in the input are preserved and rendered as separate ASCII-art blocks.
+//
+// The package validates input characters and banner integrity, returning errors for
+// unsupported characters or invalid banner data.
 package renderer
 
 import (
@@ -53,7 +62,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	}
 	output := result.String()
 	// Don't add extra newline after the last part
-	if output != "" && output[:len(output)-1] == "\n" {
+	if output != "" && output[len(output)-1] == 10 {
 		// Remove the last newline character
 		output = output[:len(output)-1]
 	}
