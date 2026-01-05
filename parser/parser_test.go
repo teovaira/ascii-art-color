@@ -164,3 +164,54 @@ func TestLoadBanner_OversizedFile(t *testing.T) {
 		t.Error("expected error for oversized file, got nil")
 	}
 }
+
+func TestLoadBanner_Thinkertoy(t *testing.T) {
+	banner, err := LoadBanner("../testdata/thinkertoy.txt")
+	if err != nil {
+		t.Fatalf("thinkertoy failed: %v", err)
+	}
+	if len(banner) != totalChars {
+		t.Errorf("expected %d chars, got %d", totalChars, len(banner))
+	}
+}
+
+func TestLoadBanner_Numbers(t *testing.T) {
+	banner, err := LoadBanner("../testdata/standard.txt")
+	if err != nil {
+		t.Fatalf("LoadBanner failed: %v", err)
+	}
+
+	for r := '0'; r <= '9'; r++ {
+		lines, ok := banner[r]
+		if !ok {
+			t.Errorf("missing digit %c", r)
+			continue
+		}
+		if len(lines) != linesPerGlyph {
+			t.Errorf("digit %c has %d lines, expected %d",
+				r, len(lines), linesPerGlyph)
+		}
+	}
+}
+func TestLoadBanner_CompleteCharacterSet(t *testing.T) {
+	banner, err := LoadBanner("../testdata/standard.txt")
+	if err != nil {
+		t.Fatalf("LoadBanner failed: %v", err)
+	}
+
+	if len(banner) != totalChars {
+		t.Fatalf("expected %d chars, got %d", totalChars, len(banner))
+	}
+
+	for r := firstPrintable; r <= lastPrintable; r++ {
+		lines, ok := banner[r]
+		if !ok {
+			t.Errorf("missing char %c (ASCII %d)", r, r)
+			continue
+		}
+		if len(lines) != linesPerGlyph {
+			t.Errorf("char %c (ASCII %d) has %d lines, expected %d",
+				r, r, len(lines), linesPerGlyph)
+		}
+	}
+}
