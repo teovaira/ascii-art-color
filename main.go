@@ -37,15 +37,15 @@ func main() {
 		os.Exit(exitCodeUsageError)
 	}
 
-	// Load character map using parser
-	charMap, err := parser.BuildCharacterMap(bannerPath)
+	// Load banner character map using parser
+	charMap, err := parser.LoadBanner(bannerPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading banner file: %v\n", err)
 		os.Exit(exitCodeBannerError)
 	}
 
 	// Render the text using renderer
-	result, err := renderer.RenderText(text, charMap)
+	result, err := renderer.RendererASCII(text, charMap)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error rendering text: %v\n", err)
 		os.Exit(exitCodeRenderError)
