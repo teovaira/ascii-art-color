@@ -143,3 +143,24 @@ func TestLoadBannerShadowA(t *testing.T) {
 		}
 	}
 }
+
+func TestLoadBanner_EmptyFile(t *testing.T) {
+	_, err := LoadBanner("../testdata/empty.txt")
+	if err == nil {
+		t.Error("expected error for empty file, got nil")
+	}
+}
+
+func TestLoadBanner_CorruptedFile(t *testing.T) {
+	_, err := LoadBanner("../testdata/corrupted.txt")
+	if err == nil {
+		t.Error("expected error for corrupted file, got nil")
+	}
+}
+
+func TestLoadBanner_OversizedFile(t *testing.T) {
+	_, err := LoadBanner("../testdata/oversized.txt")
+	if err == nil {
+		t.Error("expected error for oversized file, got nil")
+	}
+}
