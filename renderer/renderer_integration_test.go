@@ -3,6 +3,7 @@
 package renderer_test
 
 import (
+	"ascii-art/parser"
 	"ascii-art/renderer"
 	"strings"
 	"testing"
