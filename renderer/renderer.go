@@ -117,7 +117,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 func validateBannerCharacters(ch rune, banner map[rune][]string) ([]string, error) {
 
 	value, exists := banner[ch]
-	if exists == false {
+	if !exists {
 		return []string{}, fmt.Errorf("character %c (ASCII %d) not found in banner", ch, ch)
 	}
 	if len(value) != bannerHeight {
