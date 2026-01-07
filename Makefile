@@ -212,30 +212,8 @@ clean-all: clean
 	@echo "${COLOUR_GREEN}✓ Deep cleaned${COLOUR_END}"
 
 # ==================================================================================== #
-# CI/CD
-# ==================================================================================== #
-
-## ci: Run all CI checks (quality + tests + build)
-.PHONY: ci
-ci: check test build
-	@echo "${COLOUR_GREEN}✓ CI checks passed${COLOUR_END}"
-
-## pre-commit: Run checks before committing
-.PHONY: pre-commit
-pre-commit: fmt lint test
-	@echo "${COLOUR_GREEN}✓ Ready to commit${COLOUR_END}"
-
-# ==================================================================================== #
 # UTILITY
 # ==================================================================================== #
-
-## deps: Download and verify dependencies
-.PHONY: deps
-deps:
-	@echo "${COLOUR_BLUE}Downloading dependencies...${COLOUR_END}"
-	@go mod download
-	@go mod verify
-	@echo "${COLOUR_GREEN}✓ Dependencies verified${COLOUR_END}"
 
 ## tidy: Tidy go.mod and go.sum
 .PHONY: tidy
