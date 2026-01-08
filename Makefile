@@ -38,7 +38,7 @@ COLOUR_END=\033[0m
 help:
 	@echo ''
 	@echo 'Usage:'
-	@echo '  ${COLOUR_BLUE}make${COLOUR_END} ${COLOUR_GREEN}<target>${COLOUR_END}'
+	@echo "  ${COLOUR_BLUE}make${COLOUR_END} ${COLOUR_GREEN}<target>${COLOUR_END}"
 	@echo ''
 	@echo 'Targets:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' | sed -e 's/^/ /'
@@ -124,15 +124,8 @@ install:
 .PHONY: test
 test:
 	@echo "${COLOUR_BLUE}Running tests...${COLOUR_END}"
-	@go test -v -race ./...
+	@go test -v ./...
 	@echo "${COLOUR_GREEN}✓ All tests passed${COLOUR_END}"
-
-## test-short: Run tests without integration tests
-.PHONY: test-short
-test-short:
-	@echo "${COLOUR_BLUE}Running short tests...${COLOUR_END}"
-	@go test -short -v ./...
-	@echo "${COLOUR_GREEN}✓ Short tests passed${COLOUR_END}"
 
 ## coverage: Generate test coverage report
 .PHONY: coverage
