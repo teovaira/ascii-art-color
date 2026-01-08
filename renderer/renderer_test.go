@@ -4,9 +4,10 @@
 package renderer_test
 
 import (
-	"ascii-art/renderer"
 	"strings"
 	"testing"
+
+	"ascii-art/renderer"
 )
 
 // TestEmptyInput verifies that an empty input string

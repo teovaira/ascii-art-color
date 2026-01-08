@@ -3,10 +3,11 @@
 package renderer_test
 
 import (
-	"ascii-art/parser"
-	"ascii-art/renderer"
 	"strings"
 	"testing"
+
+	"ascii-art/parser"
+	"ascii-art/renderer"
 )
 
 // TestWithRealStandardBanner verifies that RendererASCII correctly renders
