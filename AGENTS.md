@@ -70,13 +70,10 @@ make coverage
 ### Test Patterns
 ```go
 func TestFunctionName_Scenario(t *testing.T) {
-    // Arrange
     input := "test data"
 
-    // Act
     result, err := FunctionName(input)
 
-    // Assert
     if err != nil {
         t.Errorf("Expected no error, got: %v", err)
     }
@@ -101,8 +98,7 @@ ascii-art/
 │   └── parser_test.go
 ├── renderer/              # ASCII art rendering package
 │   ├── renderer.go
-│   ├── renderer_test.go
-│   └── renderer_integration_test.go
+│   └── renderer_test.go
 ├── testdata/              # Banner files and test fixtures
 │   ├── standard.txt
 │   ├── shadow.txt

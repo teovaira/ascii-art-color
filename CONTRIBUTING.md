@@ -179,16 +179,13 @@ This project follows the official Go style guide and best practices:
    func BenchmarkFunctionName(b *testing.B)
    ```
 
-3. **Test Structure (Arrange-Act-Assert)**
+3. **Test Structure**
    ```go
    func TestParseArgs_ValidInput(t *testing.T) {
-       // Arrange
        args := []string{"prog", "Hello", "standard"}
 
-       // Act
        text, banner, err := ParseArgs(args)
 
-       // Assert
        if err != nil {
            t.Errorf("Expected no error, got: %v", err)
        }
@@ -368,8 +365,7 @@ ascii-art/
 │   └── parser_test.go
 ├── renderer/              # ASCII art renderer
 │   ├── renderer.go
-│   ├── renderer_test.go
-│   └── renderer_integration_test.go
+│   └── renderer_test.go
 ├── testdata/              # Banner files and test fixtures
 │   ├── standard.txt       # Standard banner
 │   ├── shadow.txt         # Shadow banner

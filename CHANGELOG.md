@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `validateInput()` for input validation
   - Efficient string building with `strings.Builder`
 - Comprehensive test suite
-  - 15 parser unit tests with 93.9% coverage
+  - 12 parser unit tests with 93.9% coverage
   - 14 renderer unit tests with 97.1% coverage
-  - Integration tests for end-to-end functionality (main and renderer)
+  - 8 main package unit tests for CLI argument parsing
+  - End-to-end integration tests for full application stack
   - Table-driven tests for multiple scenarios
 - Professional Makefile with build automation
   - Quality control targets (fmt, vet, lint, check)

@@ -111,8 +111,7 @@ ascii-art/
 │   └── parser_test.go
 ├── renderer/                  # ASCII art rendering package
 │   ├── renderer.go
-│   ├── renderer_test.go
-│   └── renderer_integration_test.go
+│   └── renderer_test.go
 ├── testdata/                  # Banner files and test fixtures
 │   ├── standard.txt           # Standard banner
 │   ├── shadow.txt             # Shadow banner
