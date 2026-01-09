@@ -1,22 +1,17 @@
+// Package main_test contains unit tests for the main package functions.
+// Tests verify command-line argument parsing and banner path resolution.
 package main
 
 import (
 	"testing"
 )
 
-// ============================================
-// UNIT TESTS FOR ParseArgs FUNCTION
-// ============================================
-
-// Test 1: ParseArgs with no arguments (just program name)
+// TestParseArgs_NoArguments verifies ParseArgs returns an error when no text argument is provided.
 func TestParseArgs_NoArguments(t *testing.T) {
-	// Arrange
-	args := []string{"./ascii-art"} // Just program name
+	args := []string{"./ascii-art"}
 
-	// Act
 	_, _, err := ParseArgs(args)
 
-	// Assert
 	if err == nil {
 		t.Error("Expected error for no arguments, got nil")
 	}
@@ -27,15 +22,12 @@ func TestParseArgs_NoArguments(t *testing.T) {
 	}
 }
 
-// Test 2: ParseArgs with just text (should default to standard)
+// TestParseArgs_TextOnly verifies ParseArgs defaults to "standard" banner when no banner is specified.
 func TestParseArgs_TextOnly(t *testing.T) {
-	// Arrange
 	args := []string{"./ascii-art", "Hello"}
 
-	// Act
 	text, banner, err := ParseArgs(args)
 
-	// Assert
 	if err != nil {
 		t.Errorf("Expected no error, got: %v", err)
 	}
@@ -49,15 +41,12 @@ func TestParseArgs_TextOnly(t *testing.T) {
 	}
 }
 
-// Test 3: ParseArgs with text and banner name
+// TestParseArgs_TextAndBanner verifies ParseArgs correctly parses both text and banner arguments.
 func TestParseArgs_TextAndBanner(t *testing.T) {
-	// Arrange
 	args := []string{"./ascii-art", "Hello", "shadow"}
 
-	// Act
 	text, banner, err := ParseArgs(args)
 
-	// Assert
 	if err != nil {
 		t.Errorf("Expected no error, got: %v", err)
 	}
@@ -71,21 +60,18 @@ func TestParseArgs_TextAndBanner(t *testing.T) {
 	}
 }
 
-// Test 4: ParseArgs with too many arguments
+// TestParseArgs_TooManyArguments verifies ParseArgs returns an error when too many arguments are provided.
 func TestParseArgs_TooManyArguments(t *testing.T) {
-	// Arrange
 	args := []string{"./ascii-art", "Hello", "shadow", "extra"}
 
-	// Act
 	_, _, err := ParseArgs(args)
 
-	// Assert
 	if err == nil {
 		t.Error("Expected error for too many arguments, got nil")
 	}
 }
 
-// Test 5: ParseArgs with all valid banner types
+// TestParseArgs_AllBannerTypes verifies ParseArgs accepts all valid banner type names.
 func TestParseArgs_AllBannerTypes(t *testing.T) {
 	testCases := []struct {
 		args           []string
@@ -97,10 +83,8 @@ func TestParseArgs_AllBannerTypes(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		// Act
 		_, banner, err := ParseArgs(tc.args)
 
-		// Assert
 		if err != nil {
 			t.Errorf("Args %v: expected no error, got: %v", tc.args, err)
 		}
@@ -112,15 +96,12 @@ func TestParseArgs_AllBannerTypes(t *testing.T) {
 	}
 }
 
-// Test 6: ParseArgs with empty string text
+// TestParseArgs_EmptyStringText verifies ParseArgs handles empty string as valid text input.
 func TestParseArgs_EmptyStringText(t *testing.T) {
-	// Arrange
 	args := []string{"./ascii-art", ""}
 
-	// Act
 	text, banner, err := ParseArgs(args)
 
-	// Assert
 	if err != nil {
 		t.Errorf("Expected no error for empty string, got: %v", err)
 	}
@@ -134,11 +115,7 @@ func TestParseArgs_EmptyStringText(t *testing.T) {
 	}
 }
 
-// ============================================
-// UNIT TESTS FOR GetBannerPath FUNCTION
-// ============================================
-
-// Test 7: GetBannerPath converts banner name to file path
+// TestGetBannerPath_ValidBanners verifies GetBannerPath correctly maps banner names to file paths.
 func TestGetBannerPath_ValidBanners(t *testing.T) {
 	testCases := []struct {
 		banner       string
@@ -150,10 +127,8 @@ func TestGetBannerPath_ValidBanners(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		// Act
 		path, err := GetBannerPath(tc.banner)
 
-		// Assert
 		if err != nil {
 			t.Errorf("Banner %q: expected no error, got: %v", tc.banner, err)
 		}
@@ -165,15 +140,12 @@ func TestGetBannerPath_ValidBanners(t *testing.T) {
 	}
 }
 
-// Test 8: GetBannerPath with invalid banner name
+// TestGetBannerPath_InvalidBanner verifies GetBannerPath returns an error for invalid banner names.
 func TestGetBannerPath_InvalidBanner(t *testing.T) {
-	// Arrange
 	banner := "invalid"
 
-	// Act
 	_, err := GetBannerPath(banner)
 
-	// Assert
 	if err == nil {
 		t.Error("Expected error for invalid banner, got nil")
 	}

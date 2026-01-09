@@ -49,25 +49,20 @@ const bannerHeight = 8
 func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	var result strings.Builder
 
-	// Validate input characters before rendering
 	if err := validateInput(input); err != nil {
 		return "", err
 	}
 
-	// Split input into logical lines based on newline characters
 	parts := strings.Split(input, "\n")
 
-	// Remove trailing empty line if input ends with a newline
 	if len(parts) > 0 && parts[len(parts)-1] == "" {
 		parts = parts[:len(parts)-1]
 	}
 
-	// Handle special case: empty input or input containing only a newline
 	if input == "" || input == "\n" {
 		return "", nil
 	}
 
-	// Banner must not be empty
 	if len(banner) == 0 {
 		return "", fmt.Errorf("banner is empty")
 	}
@@ -79,7 +74,6 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 			continue
 		}
 
-		// Render each row of the ASCII-art block
 		for i := 0; i < bannerHeight; i++ {
 			for _, ch := range line {
 				value, err := validateBannerCharacters(ch, banner)
@@ -106,9 +100,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 //   - The ASCII-art rows corresponding to the character.
 //   - An error if the character does not exist in the banner
 //     or if it does not contain exactly bannerHeight rows.
-
 func validateBannerCharacters(ch rune, banner map[rune][]string) ([]string, error) {
-
 	value, exists := banner[ch]
 	if !exists {
 		return []string{}, fmt.Errorf("character %c (ASCII %d) not found in banner", ch, ch)
@@ -133,7 +125,6 @@ func validateInput(input string) error {
 			continue
 		}
 		if ch < 32 || ch > 126 {
-
 			return fmt.Errorf("invalid character %q (ASCII %d) - must be printable ASCII (32-126)", ch, ch)
 		}
 	}

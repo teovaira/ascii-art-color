@@ -1,6 +1,15 @@
 // Package parser provides functionality for loading and parsing ASCII art banner files.
-// Supports standard ASCII printable characters (32-126) from banner files in the format:
-// 8 lines per character + 1 separator line, 855 total lines for 95 characters.
+//
+// The parser reads banner files containing ASCII art representations for printable
+// characters (range 32-126). Each banner file follows a strict format: 8 lines per
+// character definition plus 1 separator line, totaling 855 lines for 95 characters.
+//
+// Responsibilities of this package:
+//   - Read banner files from disk
+//   - Validate banner file format
+//   - Parse character definitions into usable data structures
+//
+// Any malformed banner file or invalid format results in an error.
 package parser
 
 import (
@@ -21,7 +30,18 @@ const (
 // Banner represents the ASCII-art data for all supported characters.
 type Banner map[rune][]string
 
-// LoadBanner reads a banner file (e.g. standard.txt) and returns its parsed representation.
+// LoadBanner reads a banner file and returns its parsed representation as a Banner map.
+//
+// The function reads the specified banner file, validates its format (855 lines total),
+// and constructs a map associating each printable ASCII character (32-126) with its
+// 8-line ASCII art representation.
+//
+// Parameters:
+//   - path: The file path to the banner file (e.g., "testdata/standard.txt").
+//
+// Returns:
+//   - A Banner map containing all character definitions.
+//   - An error if the file cannot be read or the format is invalid.
 func LoadBanner(path string) (Banner, error) {
 	lines, err := readLines(path)
 	if err != nil {
@@ -34,7 +54,17 @@ func LoadBanner(path string) (Banner, error) {
 	return banner, nil
 }
 
-// readLines opens the file at the given path and returns all its lines as a slice of strings.
+// readLines opens a file and returns all its lines as a slice of strings.
+//
+// The function uses a buffered scanner to read the file line by line efficiently.
+// It handles both reading errors and scanner errors appropriately.
+//
+// Parameters:
+//   - path: The file path to read.
+//
+// Returns:
+//   - A slice containing all lines from the file.
+//   - An error if the file cannot be opened or read.
 func readLines(path string) ([]string, error) {
 	file, err := os.Open(path) // #nosec G304 -- trusted banner files
 	if err != nil {

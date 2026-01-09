@@ -8,11 +8,7 @@ import (
 	"testing"
 )
 
-// ============================================
-// INTEGRATION TESTS - FULL PROGRAM EXECUTION
-// ============================================
-
-// Integration test: Run actual program and check output
+// TestMainProgram_Integration verifies end-to-end program execution with various inputs.
 func TestMainProgram_Integration(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -126,7 +122,7 @@ func TestMainProgram_Integration(t *testing.T) {
 	}
 }
 
-// Integration test: Test with actual banner files
+// TestMainProgram_RealBannerFiles verifies program works with all banner files.
 func TestMainProgram_RealBannerFiles(t *testing.T) {
 	// This test requires banner files to exist
 	banners := []string{"standard", "shadow", "thinkertoy"}
@@ -155,7 +151,7 @@ func TestMainProgram_RealBannerFiles(t *testing.T) {
 	}
 }
 
-// Integration test: Error handling
+// TestMainProgram_ErrorHandling verifies program handles error cases correctly.
 func TestMainProgram_ErrorHandling(t *testing.T) {
 	errorTests := []struct {
 		name     string

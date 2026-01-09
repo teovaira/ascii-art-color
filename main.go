@@ -1,5 +1,16 @@
 // Package main provides the ASCII art generator CLI application.
-// It converts text input into graphical ASCII art representations using banner files.
+//
+// The application orchestrates the parser and renderer packages to convert text input
+// into graphical ASCII art representations. It handles command-line argument parsing,
+// banner file selection, and error reporting with appropriate exit codes.
+//
+// Responsibilities of this package:
+//   - Parse command-line arguments
+//   - Validate and resolve banner file paths
+//   - Coordinate between parser and renderer
+//   - Handle errors with appropriate exit codes
+//
+// Any invalid input, missing files, or rendering errors are reported to stderr.
 package main
 
 import (
@@ -13,64 +24,67 @@ import (
 )
 
 const (
-	// Exit codes for different error scenarios
+	// Exit codes for different error scenarios.
 	exitCodeUsageError  = 1
 	exitCodeBannerError = 2
 	exitCodeRenderError = 3
 
-	// Default banner style
+	// Default banner style.
 	defaultBanner = "standard"
 )
 
 func main() {
-	// Parse command-line arguments
 	text, banner, err := ParseArgs(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(exitCodeUsageError)
 	}
 
-	// Get banner file path
 	bannerPath, err := GetBannerPath(banner)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(exitCodeUsageError)
 	}
 
-	// Load banner character map using parser
 	charMap, err := parser.LoadBanner(bannerPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading banner file: %v\n", err)
 		os.Exit(exitCodeBannerError)
 	}
 
-	// Render the text using renderer
 	result, err := renderer.RendererASCII(text, charMap)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error rendering text: %v\n", err)
 		os.Exit(exitCodeRenderError)
 	}
 
-	// Print result to stdout
 	fmt.Print(result)
 }
 
-// ParseArgs parses command-line arguments and returns text and banner name
+// ParseArgs parses command-line arguments and extracts text and banner name.
+//
+// The function validates argument count, extracts the text argument, interprets
+// escape sequences (like \n), and determines the banner name (defaulting to "standard"
+// if not provided).
+//
+// Parameters:
+//   - args: Command-line arguments slice (args[0] is program name).
+//
+// Returns:
+//   - text: The text to render (with escape sequences interpreted).
+//   - banner: The banner name to use.
+//   - err: An error if argument validation fails.
 func ParseArgs(args []string) (text string, banner string, err error) {
-	// args[0] is program name, so we need at least 2 elements
 	if len(args) < 2 {
 		return "", "", errors.New("usage: go run . \"text\" [banner]")
 	}
 
-	// Too many arguments
 	if len(args) > 3 {
 		return "", "", errors.New("too many arguments\nusage: go run . \"text\" [banner]")
 	}
 
-	// Get text (args[1]) and interpret escape sequences
 	text = strings.ReplaceAll(args[1], "\\n", "\n")
 
-	// Get banner (args[2] if provided, otherwise default to "standard")
 	if len(args) == 3 {
 		banner = args[2]
 	} else {
@@ -80,16 +94,25 @@ func ParseArgs(args []string) (text string, banner string, err error) {
 	return text, banner, nil
 }
 
-// GetBannerPath converts banner name to file path
+// GetBannerPath converts a banner name to its corresponding file path.
+//
+// The function validates the banner name against a predefined map of valid banners
+// (standard, shadow, thinkertoy) and returns the appropriate file path in the testdata
+// directory.
+//
+// Parameters:
+//   - banner: The banner name to resolve.
+//
+// Returns:
+//   - The file path to the banner file.
+//   - An error if the banner name is invalid.
 func GetBannerPath(banner string) (string, error) {
-	// Map of valid banner names to file paths
 	bannerPaths := map[string]string{
 		"standard":   "testdata/standard.txt",
 		"shadow":     "testdata/shadow.txt",
 		"thinkertoy": "testdata/thinkertoy.txt",
 	}
 
-	// Check if banner is valid
 	path, exists := bannerPaths[banner]
 	if !exists {
 		return "", fmt.Errorf("invalid banner name: %q\nValid options: standard, shadow, thinkertoy", banner)
