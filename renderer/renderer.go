@@ -59,7 +59,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 		parts = parts[:len(parts)-1]
 	}
 
-	if input == "" || input == "\n" {
+	if input == "" {
 		return "", nil
 	}
 
