@@ -62,7 +62,7 @@ vet:
 	@go vet ./...
 	@echo "${COLOUR_GREEN}✓ go vet passed${COLOUR_END}"
 
-## lint: Run golangci-lint
+## lint: Run golangci-lint (requires v2+)
 .PHONY: lint
 lint:
 	@echo "${COLOUR_BLUE}Running linters...${COLOUR_END}"
@@ -71,7 +71,7 @@ lint:
 		echo "${COLOUR_GREEN}✓ Linters passed${COLOUR_END}"; \
 	else \
 		echo "${COLOUR_RED}✗ golangci-lint not installed${COLOUR_END}"; \
-		echo "Install with: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+		echo "Install with: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"; \
 		exit 1; \
 	fi
 
