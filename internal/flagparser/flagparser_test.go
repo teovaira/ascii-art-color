@@ -25,3 +25,13 @@ func TestParseArgs_TooManyArgs(t *testing.T) {
 		t.Errorf("Error too many args")
 	}
 }
+func TestParseArgs_InvalidColorPrefix(t *testing.T) {
+	args := []string{"program",
+		"-color:black",
+		"some text",
+	}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error invalid color flag prefix")
+	}
+}
