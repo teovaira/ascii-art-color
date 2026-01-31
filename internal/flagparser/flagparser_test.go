@@ -85,3 +85,10 @@ func TestParseArgs_MultipleFlags(t *testing.T) {
 		t.Errorf("expected error")
 	}
 }
+func TestParseArgs_InvalidPositionForColorFlag(t *testing.T) {
+	args := []string{"program", "text", "--color=red"}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error")
+	}
+}
