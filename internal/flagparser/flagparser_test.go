@@ -78,8 +78,8 @@ func TestParseArgs_MissingString(t *testing.T) {
 		t.Errorf("Usage: go run . [OPTION] [STRING]")
 	}
 }
-func TestParseArgs_InvalidColorValue(t *testing.T) {
-	args := []string{"program", "--color=black", "text"}
+func TestParseArgs_MultipleFlags(t *testing.T) {
+	args := []string{"program", "--color=red", "--color=blue", "text"}
 	err := flagparser.ParseArgs(args)
 	if err == nil {
 		t.Errorf("expected error")
