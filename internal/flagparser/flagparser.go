@@ -5,21 +5,26 @@ import (
 	"strings"
 )
 
+const (
+	minimumArgs = 2
+	maximumArgs = 5
+)
+
 func ParseArgs(args []string) error {
 	count := 0
-	if len(args) < 2 {
+	if len(args) < minimumArgs {
 		return errors.New("error")
 	}
-	if len(args) > 5 {
+	if len(args) > maximumArgs {
 		return errors.New("error")
 	}
 	if err := validateColorFlag(args); err != nil {
 		return err
 	}
-	for i := 0; i < len(args); i++ {
-		if strings.HasPrefix(args[i], "--color=") {
+	for i, arg := range args {
+		if strings.HasPrefix(arg, "--color=") {
 			count++
-			if (i == 1) == false {
+			if i != 1 {
 				return errors.New("error")
 			}
 			if count > 1 {
