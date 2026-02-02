@@ -42,8 +42,8 @@ func ParseArgs(args []string) error {
 	if err := validateColorFlagSyntax(args); err != nil {
 		return errUsage
 	}
-	for i, arg := range args {
-		if strings.HasPrefix(arg, "--color=") {
+	for i := 1; i < len(args); i++ {
+		if strings.HasPrefix(args[i], "--color=") {
 			colorFlagCount++
 			if i != 1 {
 				return errUsage
