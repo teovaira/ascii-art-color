@@ -98,6 +98,25 @@ func validColors(color string) error {
 			}
 		}
 	}
+	 colorValue,checkHex:=strings.CutPrefix(color, "#") {
+	
+		if  checkHex {
+		if colorValue=="" {
+			return errors.New("error")
+		}else if colorValue!="" {
+			if len(colorValue) != 6 {
+			return errors.New("error")
+		}
+		for _, ch := range colorValue {
+			if !(ch>='0' && ch <= '9') && !(ch >= 'a' && ch <= 'f') && !(ch >= 'A' && ch <= 'F') {
+				return errors.New("error")
+			}
+		}
+	}
+}
+		}else if !checkHex {
+		return nil
+	}
 
 	return nil
 }
