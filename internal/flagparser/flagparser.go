@@ -39,9 +39,10 @@ func ParseArgs(args []string) error {
 	if len(args) > maximumArgs {
 		return errUsage
 	}
-	if err := validateColorFlagSyntax(args); err != nil {
+	if strings.HasPrefix(args[1], "-") && !strings.HasPrefix(args[1], "--color=") {
 		return errUsage
 	}
+
 	for i := 1; i < len(args); i++ {
 		if strings.HasPrefix(args[i], "--color=") {
 			colorFlagCount++
@@ -70,31 +71,6 @@ func ParseArgs(args []string) error {
 	}
 	return nil
 
-}
-
-// validateColorFlagSyntax checks the syntactic correctness of the --color flag.
-//
-// It validates that:
-//   - the flag starts with '--'
-//   - the flag contains an '=' separator
-//
-// This function does not validate the color value itself.
-func validateColorFlagSyntax(args []string) error {
-	isFlag := strings.HasPrefix(args[1], "-")
-	if isFlag {
-		hasDoubleDash := strings.HasPrefix(args[1], "--")
-
-		if !hasDoubleDash {
-			return errUsage
-		}
-
-		hasEqual := strings.Contains(args[1], "=")
-		if !hasEqual {
-			return errUsage
-		}
-
-	}
-	return nil
 }
 
 // validColors validates the color value provided to the --color flag.
