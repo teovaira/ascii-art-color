@@ -1,9 +1,37 @@
+// Package color parses color specifications into ANSI 24-bit terminal escape codes.
+
+// Supported formats:
+//   - Named colors: black, red, green, yellow, blue, magenta, cyan, white,
+//     orange, purple, pink, brown, gray (case-insensitive)
+//   - Hex: #RRGGBB (e.g. #ff0000)
+//   - RGB: rgb(R, G, B) (e.g. rgb(255, 0, 0))
+
+// Example:
+
+// 	rgb, _ := Parse("red")
+// 	fmt.Print(color.ANSI(rgb) + "Hello" + "\033[0m")
+
 package color
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+)
+
+const (
+	rgbComponents = 3
+	hexLen        = 7
+	decimalBase   = 10
+	hexBase       = 16
+	hexRStart     = 1
+	hexREnd       = 3
+	hexGStart     = 3
+	hexGEnd       = 5
+	hexBStart     = 5
+	uint8Bits     = 8
+	ansi24BitFmt  = "\033[38;2;%d;%d;%dm"
 )
 
 // RGB represents a 24-bit color.
@@ -28,10 +56,14 @@ var namedColors = map[string]RGB{
 }
 
 // Parse converts a color specification string into RGB.
+var ErrInvalidFormat = errors.New("invalid color format")
+
 func Parse(colorSpec string) (RGB, error) {
 	colorSpec = strings.TrimSpace(colorSpec)
+
 	if colorSpec == "" {
-		return RGB{}, fmt.Errorf("empty color specification")
+
+		return RGB{}, fmt.Errorf("empty color specification: %w", ErrInvalidFormat)
 	}
 	lower := strings.ToLower(colorSpec)
 
@@ -42,34 +74,35 @@ func Parse(colorSpec string) (RGB, error) {
 		return parseHex(colorSpec)
 	}
 	if strings.HasPrefix(lower, "rgb(") {
-		return parseRGB(colorSpec)
+		return parseRGB(lower)
 	}
-	return RGB{}, fmt.Errorf("unknown color format %q", colorSpec)
+	return RGB{}, fmt.Errorf("unknown color format %q: %w", colorSpec, ErrInvalidFormat)
 }
 
 func parseHex(hex string) (RGB, error) {
-	if len(hex) != 7 || hex[0] != '#' {
-		return RGB{}, fmt.Errorf("invalid hex format: %q", hex)
+
+	r, err := strconv.ParseUint(hex[1:3], hexBase, uint8Bits)
+	if err != nil {
+		return RGB{}, fmt.Errorf("invalid red hex: %w", err)
 	}
 
-	r, err := strconv.ParseUint(hex[1:3], 16, 8)
+	g, err := strconv.ParseUint(hex[3:5], hexBase, uint8Bits)
 	if err != nil {
-		return RGB{}, fmt.Errorf("invalid red hex: %v", err)
+		return RGB{}, fmt.Errorf("invalid green hex: %w", err)
 	}
-
-	g, err := strconv.ParseUint(hex[3:5], 16, 8)
+	b, err := strconv.ParseUint(hex[5:7], hexBase, uint8Bits)
 	if err != nil {
-		return RGB{}, fmt.Errorf("invalid green hex: %v", err)
-	}
-	b, err := strconv.ParseUint(hex[5:7], 16, 8)
-	if err != nil {
-		return RGB{}, fmt.Errorf("invalid blue hex: %v", err)
+		return RGB{}, fmt.Errorf("invalid blue hex: %w", err)
 	}
 
 	return RGB{uint8(r), uint8(g), uint8(b)}, nil
 }
 
 func parseRGB(rgbStr string) (RGB, error) {
+
+	if !strings.HasSuffix(rgbStr, ")") {
+		return RGB{}, fmt.Errorf("missing closing parenthesis: %w", ErrInvalidFormat)
+	}
 	content := strings.TrimPrefix(rgbStr, "rgb(")
 	content = strings.TrimSuffix(content, ")")
 
@@ -79,20 +112,18 @@ func parseRGB(rgbStr string) (RGB, error) {
 	}
 
 	parts := strings.Split(content, ",")
-	if len(parts) != 3 {
+	if len(parts) != rgbComponents {
 		return RGB{}, fmt.Errorf("rgb() requires exactly 3 components, got %d", len(parts))
 	}
 
 	var r, g, b uint8
 	for i, part := range parts {
 		valueString := strings.TrimSpace(part)
-		value, err := strconv.ParseUint(valueString, 10, 8)
+		value, err := strconv.ParseUint(valueString, decimalBase, uint8Bits)
 		if err != nil {
-			return RGB{}, fmt.Errorf("invalid rgb() component %q: %v", valueString, err)
+			return RGB{}, fmt.Errorf("invalid rgb() component %q: %w", valueString, err)
 		}
-		if value > 255 {
-			return RGB{}, fmt.Errorf("rgb() component %q out of range (0-255)", valueString)
-		}
+
 		switch i {
 		case 0:
 			r = uint8(value)
@@ -106,6 +137,8 @@ func parseRGB(rgbStr string) (RGB, error) {
 	return RGB{r, g, b}, nil
 }
 
+// ANSI returns 24-bit ANSI escape sequence for the parsed color.
+// Format: \x1b[38;2;<r>;<g>;<b>m
 func ANSI(rgb RGB) string {
-	return fmt.Sprintf("\033[38;2;%d;%d;%dm", rgb.R, rgb.G, rgb.B)
+	return fmt.Sprintf(ansi24BitFmt, rgb.R, rgb.G, rgb.B)
 }

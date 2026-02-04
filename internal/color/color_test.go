@@ -1,65 +1,57 @@
-/*
-Package color parses color specifications into ANSI 24-bit terminal escape codes.
-
-Supported formats:
-  - Named colors: black, red, green, yellow, blue, magenta, cyan, white,
-    orange, purple, pink, brown, gray (case-insensitive)
-  - Hex: #RRGGBB (e.g. #ff0000)
-  - RGB: rgb(R, G, B) (e.g. rgb(255, 0, 0))
-
-Example:
-
-	rgb, _ := Parse("red")
-	fmt.Print(color.ANSI(rgb) + "Hello" + "\033[0m")
-*/
-package color
+package color_test
 
 import (
+	"ascii-art-color/internal/color"
 	"testing"
 )
 
-func Test_Parse(t *testing.T) {
+func TestParse(t *testing.T) {
 	tests := []struct {
 		name      string
 		colorSpec string
-		want      RGB
+		want      color.RGB
 		wantErr   bool
 	}{
 		// Named colors
-		{"named_red", "red", RGB{255, 0, 0}, false},
-		{"named_green", "green", RGB{0, 255, 0}, false},
-		{"named_blue", "blue", RGB{0, 0, 255}, false},
-		{"named_case_insensitive", "RED", RGB{255, 0, 0}, false},
-		{"named_unknown", "blurple", RGB{}, true},
+		{"named_red", "red", color.RGB{255, 0, 0}, false},
+		{"named_green", "green", color.RGB{0, 255, 0}, false},
+		{"named_blue", "blue", color.RGB{0, 0, 255}, false},
+		{"named_case_insensitive", "RED", color.RGB{255, 0, 0}, false},
+		{"named_unknown", "blurple", color.RGB{}, true},
 
 		// Extended names
-		{"named_orange", "orange", RGB{255, 165, 0}, false},
-		{"named_purple", "purple", RGB{128, 0, 128}, false},
-		{"named_pink", "pink", RGB{255, 192, 203}, false},
-		{"named_brown", "brown", RGB{165, 42, 42}, false},
-		{"named_gray", "gray", RGB{128, 128, 128}, false},
+		{"named_orange", "orange", color.RGB{255, 165, 0}, false},
+		{"named_purple", "purple", color.RGB{128, 0, 128}, false},
+		{"named_pink", "pink", color.RGB{255, 192, 203}, false},
+		{"named_brown", "brown", color.RGB{165, 42, 42}, false},
+		{"named_gray", "gray", color.RGB{128, 128, 128}, false},
 
 		// Hex
-		{"hex_red", "#ff0000", RGB{255, 0, 0}, false},
-		{"hex_invalid_length_short", "#ff0", RGB{}, true},
-		{"hex_invalid_length_long", "#ff000000", RGB{}, true},
-		{"hex_invalid_chars", "#gg0000", RGB{}, true},
+		{"hex_red", "#ff0000", color.RGB{255, 0, 0}, false},
+		{"hex_invalid_length_short", "#ff0", color.RGB{}, true},
+		{"hex_invalid_length_long", "#ff000000", color.RGB{}, true},
+		{"hex_invalid_chars", "#gg0000", color.RGB{}, true},
 
 		// RGB
-		{"rgb_red", "rgb(255, 0, 0)", RGB{255, 0, 0}, false},
-		{"rgb_spaces", "rgb( 255 , 0 , 0 )", RGB{255, 0, 0}, false},
-		{"rgb_invalid_count", "rgb(255)", RGB{}, true},
-		{"rgb_out_of_range", "rgb(300, 0, 0)", RGB{}, true},
-		{"rgb_non_number", "rgb(a, 0, 0)", RGB{}, true},
+		{"rgb_red", "rgb(255, 0, 0)", color.RGB{255, 0, 0}, false},
+		{"rgb_spaces", "rgb( 255 , 0 , 0 )", color.RGB{255, 0, 0}, false},
+		{"rgb_invalid_count", "rgb(255)", color.RGB{}, true},
+		{"rgb_out_of_range", "rgb(300, 0, 0)", color.RGB{}, true},
+		{"rgb_non_number", "rgb(a, 0, 0)", color.RGB{}, true},
+		{"rgb_uppercase", "RGB(255,0,0)", color.RGB{255, 0, 0}, false},
+		{"rgb_no_space", "rgb(255,0,0)", color.RGB{255, 0, 0}, false},
+		{"padded_named", " red ", color.RGB{255, 0, 0}, false},
+		{"rgb_boundary_low", "rgb(0,0,0)", color.RGB{0, 0, 0}, false},
+		{"rgb_missing_paren", "rgb(255,0,0", color.RGB{}, true},
 
 		// Empty / whitespace
-		{"empty_spec", "", RGB{}, true},
-		{"whitespace_spec", "   ", RGB{}, true},
+		{"empty_spec", "", color.RGB{}, true},
+		{"whitespace_spec", "   ", color.RGB{}, true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.colorSpec)
+			got, err := color.Parse(tt.colorSpec)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf(`Parse(%q) error = %v, wantErr %t`, tt.colorSpec, err, tt.wantErr)
 			}
@@ -70,19 +62,19 @@ func Test_Parse(t *testing.T) {
 	}
 }
 
-func Test_ANSI(t *testing.T) {
+func TestANSI(t *testing.T) {
 	tests := []struct {
 		name string
-		rgb  RGB
+		rgb  color.RGB
 		want string
 	}{
-		{"red", RGB{255, 0, 0}, "\033[38;2;255;0;0m"},
-		{"green", RGB{0, 255, 0}, "\033[38;2;0;255;0m"},
+		{"red", color.RGB{255, 0, 0}, "\033[38;2;255;0;0m"},
+		{"green", color.RGB{0, 255, 0}, "\033[38;2;0;255;0m"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ANSI(tt.rgb)
+			got := color.ANSI(tt.rgb)
 			if got != tt.want {
 				t.Fatalf("ANSI(%#v) = %q, want %q", tt.rgb, got, tt.want)
 			}
