@@ -61,3 +61,21 @@ func TestFindPositions_EmptySubstring(t *testing.T) {
 		}
 	}
 }
+func TestFindPositions_MultipleOccurances(t *testing.T) {
+	text := "hello"
+	substring := "ll"
+	expected := []bool{false, false, true, true, false}
+	output := coloring.FindPositions(text, substring)
+	if len(output) != len(expected) {
+		t.Fatalf("expected length %d,got %d", len(expected), len(output))
+	}
+	for i := range expected {
+		if output[i] != expected[i] {
+			t.Errorf("at index %d: expected %v,got %v",
+				i,
+				expected[i],
+				output[i],
+			)
+		}
+	}
+}
