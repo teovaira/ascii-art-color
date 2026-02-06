@@ -2,6 +2,7 @@ package coloring_test
 
 import (
 	"ascii-art-color/internal/coloring"
+	"strings"
 	"testing"
 )
 
@@ -61,5 +62,22 @@ func TestFindPositions(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestApplyColor_Integration(t *testing.T) {
+	positions := coloring.FindPositions("kitten", "kit")
+
+	art := []string{"####################"}
+
+	colored := coloring.ApplyColor(art, positions, "\x1b[32m")
+
+	if len(colored) == 0 {
+		t.Fatal("ApplyColor returned empty result")
+	}
+
+	line := colored[0]
+	if !strings.Contains(line, "\x1b[32m") || !strings.Contains(line, "\x1b[0m") {
+		t.Error("Expected ANSI color codes in output")
 	}
 }
