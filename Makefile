@@ -87,33 +87,38 @@ check: fmt vet lint
 ## run: Run the application with default arguments
 .PHONY: run
 run:
-	@go run . "Hello World"
+	@cd cmd/ascii-art && go run . "Hello World"
+
+## run-color: Run the application with color mode
+.PHONY: run-color
+run-color:
+	@cd cmd/ascii-art && go run . --color=red "Hello World"
 
 ## run-example: Run the application with all banner styles
 .PHONY: run-example
 run-example:
 	@echo "${COLOUR_BLUE}Standard banner:${COLOUR_END}"
-	@go run . "ASCII" standard
+	@cd cmd/ascii-art && go run . "ASCII" standard
 	@echo ""
 	@echo "${COLOUR_BLUE}Shadow banner:${COLOUR_END}"
-	@go run . "ASCII" shadow
+	@cd cmd/ascii-art && go run . "ASCII" shadow
 	@echo ""
 	@echo "${COLOUR_BLUE}Thinkertoy banner:${COLOUR_END}"
-	@go run . "ASCII" thinkertoy
+	@cd cmd/ascii-art && go run . "ASCII" thinkertoy
 
 ## build: Build the binary
 .PHONY: build
 build:
 	@echo "${COLOUR_BLUE}Building $(BINARY_NAME)...${COLOUR_END}"
 	@mkdir -p $(BUILD_DIR)
-	@go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) .
+	@go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd/ascii-art
 	@echo "${COLOUR_GREEN}✓ Binary built: $(BUILD_DIR)/$(BINARY_NAME)${COLOUR_END}"
 
 ## install: Install the binary to GOPATH/bin
 .PHONY: install
 install:
 	@echo "${COLOUR_BLUE}Installing $(BINARY_NAME)...${COLOUR_END}"
-	@go install $(LDFLAGS)
+	@go install $(LDFLAGS) ./cmd/ascii-art
 	@echo "${COLOUR_GREEN}✓ Installed to $(shell go env GOPATH)/bin/$(BINARY_NAME)${COLOUR_END}"
 
 # ==================================================================================== #
@@ -161,8 +166,8 @@ build-all: build-linux build-darwin build-windows
 build-linux:
 	@echo "${COLOUR_BLUE}Building for Linux...${COLOUR_END}"
 	@mkdir -p $(BUILD_DIR)
-	@GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 .
-	@GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 .
+	@GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 ./cmd/ascii-art
+	@GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-linux-arm64 ./cmd/ascii-art
 	@echo "${COLOUR_GREEN}✓ Linux binaries built${COLOUR_END}"
 
 ## build-darwin: Build macOS binaries (amd64 and arm64)
@@ -170,8 +175,8 @@ build-linux:
 build-darwin:
 	@echo "${COLOUR_BLUE}Building for macOS...${COLOUR_END}"
 	@mkdir -p $(BUILD_DIR)
-	@GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 .
-	@GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-arm64 .
+	@GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 ./cmd/ascii-art
+	@GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-arm64 ./cmd/ascii-art
 	@echo "${COLOUR_GREEN}✓ macOS binaries built${COLOUR_END}"
 
 ## build-windows: Build Windows binary (amd64)
@@ -179,7 +184,7 @@ build-darwin:
 build-windows:
 	@echo "${COLOUR_BLUE}Building for Windows...${COLOUR_END}"
 	@mkdir -p $(BUILD_DIR)
-	@GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe .
+	@GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe ./cmd/ascii-art
 	@echo "${COLOUR_GREEN}✓ Windows binary built${COLOUR_END}"
 
 # ==================================================================================== #
