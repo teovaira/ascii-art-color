@@ -61,6 +61,16 @@ func main() {
 	fmt.Print(result)
 }
 
+// hasColorFlag checks whether any argument contains the --color= flag.
+func hasColorFlag(args []string) bool {
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "--color=") {
+			return true
+		}
+	}
+	return false
+}
+
 // ParseArgs parses command-line arguments and extracts text and banner name.
 //
 // The function validates argument count, extracts the text argument, interprets
