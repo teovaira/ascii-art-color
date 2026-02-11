@@ -141,6 +141,97 @@ func TestHasColorFlag(t *testing.T) {
 	}
 }
 
+// TestExtractColorArgs verifies extraction of color, substring, text, and banner from color-mode args.
+func TestExtractColorArgs(t *testing.T) {
+	tests := []struct {
+		name      string
+		args      []string
+		wantColor string
+		wantSub   string
+		wantText  string
+		wantBnr   string
+		wantErr   bool
+	}{
+		{
+			name:      "flag and text only",
+			args:      []string{"prog", "--color=red", "hello"},
+			wantColor: "red", wantSub: "", wantText: "hello", wantBnr: "standard",
+		},
+		{
+			name:      "flag text and banner",
+			args:      []string{"prog", "--color=red", "hello", "shadow"},
+			wantColor: "red", wantSub: "", wantText: "hello", wantBnr: "shadow",
+		},
+		{
+			name:      "flag substring and text",
+			args:      []string{"prog", "--color=red", "sub", "hello"},
+			wantColor: "red", wantSub: "sub", wantText: "hello", wantBnr: "standard",
+		},
+		{
+			name:      "flag substring text and banner",
+			args:      []string{"prog", "--color=red", "sub", "hello", "thinkertoy"},
+			wantColor: "red", wantSub: "sub", wantText: "hello", wantBnr: "thinkertoy",
+		},
+		{
+			name:      "audit case orange GuYs",
+			args:      []string{"prog", "--color=orange", "GuYs", "HeY GuYs"},
+			wantColor: "orange", wantSub: "GuYs", wantText: "HeY GuYs", wantBnr: "standard",
+		},
+		{
+			name:      "audit case blue B",
+			args:      []string{"prog", "--color=blue", "B", "RGB()"},
+			wantColor: "blue", wantSub: "B", wantText: "RGB()", wantBnr: "standard",
+		},
+		{
+			name:      "hex color",
+			args:      []string{"prog", "--color=#ff0000", "hello"},
+			wantColor: "#ff0000", wantSub: "", wantText: "hello", wantBnr: "standard",
+		},
+		{
+			name:      "rgb color",
+			args:      []string{"prog", "--color=rgb(255,0,0)", "hello"},
+			wantColor: "rgb(255,0,0)", wantSub: "", wantText: "hello", wantBnr: "standard",
+		},
+		{
+			name:      "newline in text",
+			args:      []string{"prog", "--color=red", "hello\\nworld"},
+			wantColor: "red", wantSub: "", wantText: "hello\nworld", wantBnr: "standard",
+		},
+		{
+			name:    "missing text after flag",
+			args:    []string{"prog", "--color=red"},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			colorSpec, sub, text, bnr, err := extractColorArgs(tt.args)
+			if tt.wantErr {
+				if err == nil {
+					t.Fatalf("expected error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if colorSpec != tt.wantColor {
+				t.Errorf("color = %q, want %q", colorSpec, tt.wantColor)
+			}
+			if sub != tt.wantSub {
+				t.Errorf("substring = %q, want %q", sub, tt.wantSub)
+			}
+			if text != tt.wantText {
+				t.Errorf("text = %q, want %q", text, tt.wantText)
+			}
+			if bnr != tt.wantBnr {
+				t.Errorf("banner = %q, want %q", bnr, tt.wantBnr)
+			}
+		})
+	}
+}
+
 // TestGetBannerPath_ValidBanners verifies GetBannerPath correctly maps banner names to file paths.
 func TestGetBannerPath_ValidBanners(t *testing.T) {
 	testCases := []struct {
