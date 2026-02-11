@@ -115,6 +115,32 @@ func TestParseArgs_EmptyStringText(t *testing.T) {
 	}
 }
 
+// TestHasColorFlag verifies detection of the --color= flag in argument lists.
+func TestHasColorFlag(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+		want bool
+	}{
+		{"no args", []string{"prog"}, false},
+		{"text only", []string{"prog", "hello"}, false},
+		{"text and banner", []string{"prog", "hello", "shadow"}, false},
+		{"color flag present", []string{"prog", "--color=red", "hello"}, true},
+		{"color flag with substring", []string{"prog", "--color=red", "sub", "hello"}, true},
+		{"wrong format dash", []string{"prog", "-color=red", "hello"}, false},
+		{"wrong format colon", []string{"prog", "--color:red", "hello"}, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := hasColorFlag(tt.args)
+			if got != tt.want {
+				t.Errorf("hasColorFlag(%v) = %v, want %v", tt.args, got, tt.want)
+			}
+		})
+	}
+}
+
 // TestGetBannerPath_ValidBanners verifies GetBannerPath correctly maps banner names to file paths.
 func TestGetBannerPath_ValidBanners(t *testing.T) {
 	testCases := []struct {
