@@ -1,6 +1,6 @@
-# Contributing to ASCII Art Generator
+# Contributing to ASCII Art Color
 
-Thank you for your interest in contributing to the ascii-art project! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to the ascii-art-color project! This document provides guidelines and instructions for contributing.
 
 ## Table of Contents
 
@@ -35,8 +35,8 @@ This project is part of the Zone01 curriculum. We expect all contributors to:
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/yourusername/ascii-art.git
-   cd ascii-art
+   git clone https://github.com/yourusername/ascii-art-color.git
+   cd ascii-art-color
    ```
 
 2. **Verify Go installation**
@@ -126,14 +126,14 @@ This project follows the official Go style guide and best practices:
    - Line length: 120 characters max
 
 2. **Naming Conventions**
-   - Package names: lowercase, single word (`parser`, `renderer`)
+   - Package names: lowercase, single word (`parser`, `renderer`, `color`, `coloring`, `flagparser`)
    - Exported identifiers: PascalCase (`RenderText`, `BuildCharacterMap`)
    - Unexported identifiers: camelCase (`renderLine`, `validateInput`)
    - Constants: PascalCase or ALL_CAPS for clarity
 
 3. **Documentation**
    - Every package must have a package comment
-   - Exported functions must have comments
+   - Exported functions must have doc comments with Parameters/Returns sections
    - Comment format: `// FunctionName does...`
 
 4. **Error Handling**
@@ -239,10 +239,10 @@ make coverage
 make coverage-view  # Opens HTML report
 
 # Specific package
-go test ./parser -v
+go test ./internal/parser -v
 
 # Specific test
-go test -run TestParseBannerFile
+go test ./internal/parser -run TestLoadBanner
 ```
 
 ## Commit Message Format
@@ -273,6 +273,9 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) format:
 - `parser`: Parser package
 - `renderer`: Renderer package
 - `main`: Main package
+- `color`: Color package
+- `coloring`: Coloring package
+- `flagparser`: Flagparser package
 - `tests`: Test-related
 - `docs`: Documentation
 - `build`: Build/tooling
@@ -356,34 +359,45 @@ When creating a PR, include:
 ## Project Structure
 
 ```
-ascii-art/
-├── .gitignore             # Git ignore rules
-├── .golangci.yml          # Linter configuration
-├── LICENSE                # Project license
-├── Makefile               # Build automation
-├── go.mod                 # Go module file
-├── main.go                # CLI entry point
-├── integration_test.go    # End-to-end tests
-├── main_test.go           # Unit tests for main
-├── parser/                # Banner file parser
-│   ├── banner_parser.go
-│   └── parser_test.go
-├── renderer/              # ASCII art renderer
-│   ├── renderer.go
-│   └── renderer_test.go
-├── testdata/              # Banner files and test fixtures
-│   ├── standard.txt       # Standard banner
-│   ├── shadow.txt         # Shadow banner
-│   ├── thinkertoy.txt     # Thinkertoy banner
-│   ├── corrupted.txt      # Test fixture
-│   ├── empty.txt          # Test fixture
-│   └── oversized.txt      # Test fixture
-└── Documentation/
-    ├── README.md          # User documentation
-    ├── AGENTS.md          # AI agent instructions
-    ├── CHANGELOG.md       # Version history
-    ├── CONTRIBUTING.md    # This file
-    └── PERMISSIONS.md     # Team permissions
+ascii-art-color/
+├── .gitignore                 # Git ignore rules
+├── .golangci.yml              # Linter configuration
+├── LICENSE                    # Project license
+├── Makefile                   # Build automation
+├── go.mod                     # Go module file
+├── AGENTS.md                  # AI agent instructions
+├── CHANGELOG.md               # Version history
+├── CONTRIBUTING.md            # This file
+├── PERMISSIONS.md             # Team permissions
+├── README.md                  # User documentation
+├── cmd/
+│   └── ascii-art/
+│       ├── main.go            # CLI entry point
+│       ├── main_test.go       # Unit tests for main
+│       ├── integration_test.go # End-to-end tests
+│       └── testdata/          # Banner files and test fixtures
+│           ├── standard.txt
+│           ├── shadow.txt
+│           ├── thinkertoy.txt
+│           ├── corrupted.txt  # Test fixture
+│           ├── empty.txt      # Test fixture
+│           └── oversized.txt  # Test fixture
+└── internal/
+    ├── color/                 # Color specification parsing
+    │   ├── color.go
+    │   └── color_test.go
+    ├── coloring/              # ANSI color application to ASCII art
+    │   ├── coloring.go
+    │   └── coloring_test.go
+    ├── flagparser/            # CLI argument validation
+    │   ├── flagparser.go
+    │   └── flagparser_test.go
+    ├── parser/                # Banner file parsing
+    │   ├── banner_parser.go
+    │   └── parser_test.go
+    └── renderer/              # ASCII art rendering
+        ├── renderer.go
+        └── renderer_test.go
 ```
 
 ## Common Tasks
@@ -442,4 +456,4 @@ This project is part of the Zone01 curriculum.
 
 ---
 
-Thank you for contributing to ascii-art! 🎨
+Thank you for contributing to ascii-art-color!
