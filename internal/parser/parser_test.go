@@ -237,6 +237,85 @@ func TestLoadBannerCompleteCharacterSet(t *testing.T) {
 	}
 }
 
+// TestCharWidths verifies that CharWidths returns the correct column width
+// for each character in the input text based on the banner glyph data.
+func TestCharWidths(t *testing.T) {
+	// Build a minimal banner with known glyph widths.
+	banner := Banner{
+		'H': {"_    _ ", "_|  |_ ", "_|  |_ ", "|_  _| ", " |  |  ", " |  |  ", "       ", "       "},
+		'i': {"   ", "   ", " _ ", "| |", "| |", "|_|", "   ", "   "},
+		' ': {"      ", "      ", "      ", "      ", "      ", "      ", "      ", "      "},
+	}
+
+	tests := []struct {
+		name string
+		text string
+		want []int
+	}{
+		{
+			name: "single char",
+			text: "H",
+			want: []int{7},
+		},
+		{
+			name: "multiple chars",
+			text: "Hi",
+			want: []int{7, 3},
+		},
+		{
+			name: "with space",
+			text: "H i",
+			want: []int{7, 6, 3},
+		},
+		{
+			name: "empty string",
+			text: "",
+			want: []int{},
+		},
+		{
+			name: "unknown char defaults to zero",
+			text: "Z",
+			want: []int{0},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := CharWidths(tt.text, banner)
+			if len(got) != len(tt.want) {
+				t.Fatalf("CharWidths(%q) returned %d widths, want %d", tt.text, len(got), len(tt.want))
+			}
+			for i, w := range got {
+				if w != tt.want[i] {
+					t.Errorf("CharWidths(%q)[%d] = %d, want %d", tt.text, i, w, tt.want[i])
+				}
+			}
+		})
+	}
+}
+
+// TestCharWidths_RealBanner verifies CharWidths with actual loaded banner data.
+func TestCharWidths_RealBanner(t *testing.T) {
+	banner, err := LoadBanner("../../cmd/ascii-art/testdata/standard.txt")
+	if err != nil {
+		t.Fatalf("LoadBanner failed: %v", err)
+	}
+
+	widths := CharWidths("AB", banner)
+	if len(widths) != 2 {
+		t.Fatalf("expected 2 widths, got %d", len(widths))
+	}
+
+	// Each width should match len(glyph[0]) for that character.
+	for i, ch := range "AB" {
+		glyph := banner[ch]
+		expected := len(glyph[0])
+		if widths[i] != expected {
+			t.Errorf("width[%d] (%c) = %d, want %d", i, ch, widths[i], expected)
+		}
+	}
+}
+
 // TestLoadBannerAllSpecialCharacters verifies that all special characters
 // (punctuation, symbols, etc.) load correctly from the banner file.
 func TestLoadBannerAllSpecialCharacters(t *testing.T) {
