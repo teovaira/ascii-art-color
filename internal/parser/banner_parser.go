@@ -16,8 +16,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -116,23 +114,24 @@ func buildBanner(lines []string) (Banner, error) {
 	return banner, nil
 }
 
-// CharWidths returns column widths for each character in text using given bannerType.
-// Used by coloring to map text positions → ASCII art columns precisely.
-func CharWidths(text string, bannerType string) []int {
-	bannerPath := filepath.Join("banners", bannerType+".txt")
-	banner, err := LoadBanner(bannerPath)
-	if err != nil {
-		return make([]int, len(text))
-	}
-
+// CharWidths returns the column width of each character in text based on the
+// provided Banner glyph data. Each width corresponds to len(glyph[0]) for the
+// character's ASCII art representation. Unknown characters get width 0.
+//
+// Parameters:
+//   - text: The input string whose character widths are needed.
+//   - banner: The loaded Banner map containing glyph data.
+//
+// Returns:
+//   - A slice of integers with one width per character in text.
+func CharWidths(text string, banner Banner) []int {
 	widths := make([]int, len(text))
 	for i, char := range text {
 		glyph := banner[char]
 		if glyph == nil {
-			widths[i] = 6
 			continue
 		}
-		widths[i] = len(strings.TrimRight(glyph[0], " ")) + 1
+		widths[i] = len(glyph[0])
 	}
 	return widths
 }
