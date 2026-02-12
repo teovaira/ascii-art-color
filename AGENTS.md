@@ -311,6 +311,20 @@ func TestParse(t *testing.T) {
 - **Measure impact**: Benchmark before and after
 - **Premature optimization**: Root of all evil — avoid
 
+### Profiling
+```bash
+# CPU profiling
+go test -cpuprofile=cpu.prof -bench=. ./...
+go tool pprof cpu.prof
+
+# Memory profiling
+go test -memprofile=mem.prof -bench=. ./...
+go tool pprof mem.prof
+
+# Clean up profiling artifacts
+rm -f cpu.prof mem.prof
+```
+
 ### Memory Management
 ```go
 // Preallocate slices when size is known
@@ -502,6 +516,7 @@ make test     # All tests pass
 
 ### Pre-Pull Request
 - [ ] All tests pass: `go test ./...`
+- [ ] No race conditions: `go test -race ./...`
 - [ ] Coverage maintained or improved
 - [ ] golangci-lint passes: `golangci-lint run`
 - [ ] Documentation updated (if needed)
