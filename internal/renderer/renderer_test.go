@@ -10,7 +10,7 @@ import (
 func TestEmptyInput(t *testing.T) {
 	input := ""
 	banner := map[rune][]string{}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -33,7 +33,7 @@ A8
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -57,7 +57,7 @@ A8B8
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -81,7 +81,7 @@ A8  A8
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		' ': {"  ", "  ", "  ", "  ", "  ", "  ", "  ", "  "},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -105,7 +105,7 @@ A81A8
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'1': {"1", "1", "1", "1", "1", "1", "1", "1"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -125,9 +125,9 @@ func TestAllSpecialCharacters(t *testing.T) {
 		}
 	}
 
-	output, err := renderer.RendererASCII(specials, banner)
+	output, err := renderer.ASCII(specials, banner)
 	if err != nil {
-		t.Fatalf("RendererASCII failed for special characters: %v", err)
+		t.Fatalf("ASCII failed for special characters: %v", err)
 	}
 
 	lines := strings.Split(output, "\n")
@@ -165,7 +165,7 @@ B8
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -188,7 +188,7 @@ A8
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -221,7 +221,7 @@ B8
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -235,7 +235,7 @@ func TestMissingCharacter(t *testing.T) {
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err == nil {
 		t.Error("expected error for missing character 'B', got nil")
 	}
@@ -253,7 +253,7 @@ func TestCorruptedBanner(t *testing.T) {
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A6", "A7", "A8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err == nil {
 		t.Error("expected error for corrupted banner, got nil")
 	}
@@ -268,7 +268,7 @@ func TestInvalidCharacters(t *testing.T) {
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
 	}
-	output, err := renderer.RendererASCII(input, banner)
+	output, err := renderer.ASCII(input, banner)
 	if err == nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -291,9 +291,9 @@ func TestCompleteASCIIRange(t *testing.T) {
 		input.WriteRune(ch)
 	}
 
-	output, err := renderer.RendererASCII(input.String(), banner)
+	output, err := renderer.ASCII(input.String(), banner)
 	if err != nil {
-		t.Fatalf("RendererASCII failed for ASCII range: %v", err)
+		t.Fatalf("ASCII failed for ASCII range: %v", err)
 	}
 
 	lines := strings.Split(output, "\n")

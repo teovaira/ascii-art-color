@@ -63,7 +63,7 @@ func runColorMode(args []string) {
 			continue
 		}
 
-		art, err := renderer.RendererASCII(line, charMap)
+		art, err := renderer.ASCII(line, charMap)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error rendering text: %v\n", err)
 			os.Exit(exitCodeRenderError)

@@ -110,7 +110,7 @@ package renderer
 func ASCII(text string) {} // Called as: renderer.ASCII()
 
 // BAD: Stuttering
-func RendererASCII(text string) {} // Called as: renderer.RendererASCII()
+func ASCII(text string) {} // Called as: renderer.ASCII()
 
 // Package: lowercase, single word (parser, renderer, color)
 // Exported: PascalCase (BuildCharacterMap, RenderText)

@@ -19,11 +19,11 @@ flowchart TD
     I --> J["parser.LoadBanner()\nBanner map"]
     J --> K["color.ANSI()\nANSI escape code"]
 
-    G --> L["renderer.RendererASCII()\nASCII art string"]
+    G --> L["renderer.ASCII()\nASCII art string"]
     L --> M["fmt.Print()\nstdout"]
 
     K --> N["For each line in text"]
-    N --> O["renderer.RendererASCII()\nASCII art lines"]
+    N --> O["renderer.ASCII()\nASCII art lines"]
     O --> P["parser.CharWidths()\ncharacter widths"]
     P --> Q["coloring.ApplyColor()\ncolored ASCII art"]
     Q --> R{"More lines?"}

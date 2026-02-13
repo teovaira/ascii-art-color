@@ -63,7 +63,7 @@ func main() {
 		os.Exit(exitCodeBannerError)
 	}
 
-	result, err := renderer.RendererASCII(text, charMap)
+	result, err := renderer.ASCII(text, charMap)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error rendering text: %v\n", err)
 		os.Exit(exitCodeRenderError)

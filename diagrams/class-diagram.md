@@ -26,7 +26,7 @@ classDiagram
 
     class renderer {
         <<package>>
-        +RendererASCII(input string, banner map~rune, []string~) (string, error)
+        +ASCII(input string, banner map~rune, []string~) (string, error)
     }
 
     class color {
