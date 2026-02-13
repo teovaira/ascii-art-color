@@ -21,10 +21,11 @@
 package main
 
 import (
-	"ascii-art-color/internal/parser"
-	"ascii-art-color/internal/renderer"
 	"fmt"
 	"os"
+
+	"ascii-art-color/internal/parser"
+	"ascii-art-color/internal/renderer"
 )
 
 const (
