@@ -83,7 +83,7 @@ func TestMainProgram_Integration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			args := append([]string{"run", "main.go"}, tt.args...)
+			args := append([]string{"run", "."}, tt.args...)
 			cmd := exec.Command("go", args...)
 			output, err := cmd.CombinedOutput()
 
@@ -244,7 +244,7 @@ func TestRunColorMode(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			args := append([]string{"run", "main.go"}, tt.args...)
+			args := append([]string{"run", "."}, tt.args...)
 			cmd := exec.Command("go", args...)
 			output, err := cmd.CombinedOutput()
 
@@ -269,7 +269,7 @@ func TestMainProgram_RealBannerFiles(t *testing.T) {
 
 	for _, banner := range banners {
 		t.Run("Banner_"+banner, func(t *testing.T) {
-			cmd := exec.Command("go", "run", "main.go", "ABC", banner)
+			cmd := exec.Command("go", "run", ".", "ABC", banner)
 			output, err := cmd.CombinedOutput()
 
 			if err != nil {
@@ -309,7 +309,7 @@ func TestMainProgram_ErrorHandling(t *testing.T) {
 
 	for _, tt := range errorTests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command("go", append([]string{"run", "main.go"}, tt.args...)...)
+			cmd := exec.Command("go", append([]string{"run", "."}, tt.args...)...)
 			output, err := cmd.CombinedOutput()
 
 			if err == nil {
