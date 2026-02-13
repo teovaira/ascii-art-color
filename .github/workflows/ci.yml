@@ -52,6 +52,42 @@ jobs:
       - name: Run tests
         run: go test ./...
 
+  # ─── COVERAGE JOB ───────────────────────────────────────────────────────
+  # Generates a full test coverage report on Ubuntu + Go 1.22 and uploads
+  # artifacts for inspection/download from the workflow run page.
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Generate coverage profile
+        run: go test -covermode=atomic -coverprofile=coverage.out ./...
+
+      - name: Generate coverage summary
+        run: |
+          go tool cover -func=coverage.out | tee coverage-summary.txt
+          echo "## Coverage Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          cat coverage-summary.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.out
+            coverage-summary.txt
+
   # ─── LINT JOB ──────────────────────────────────────────────────────────
   # Runs golangci-lint to enforce code quality standards.
   # Only runs on Ubuntu because linting analyzes source code text —
