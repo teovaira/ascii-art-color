@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-02-13
 
 ### Added
+- Embedded filesystem for banner files using Go's `embed` package
+  - Banner files bundled into binary at compile time
+  - Binary is now fully relocatable and self-contained
+  - No external testdata files required at runtime
+- `GetBannerFS()` function in main package to expose embedded filesystem
+- Binary integration test (`TestBuiltBinary_FromRepoRoot`) to validate relocatability
 - Color package (`internal/color`) for parsing color specifications
   - Named colors: red, green, blue, yellow, cyan, magenta, white, black, orange, purple, pink, brown, gray
   - Hex format: `#RRGGBB`
@@ -45,6 +51,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Renders natively on GitHub
 
 ### Changed
+- `parser.LoadBanner()` signature changed from `LoadBanner(path string)` to `LoadBanner(fsys fs.FS, path string)`
+  - Accepts any `fs.FS` implementation (embedded, disk, testing, etc.)
+  - Enables dependency injection for filesystem operations
+- `parser.readLines()` now uses `fs.ReadFile()` instead of `os.Open()`
+- Test files updated to use `os.DirFS()` for reading real files from disk
+- Architecture diagrams updated to show new `fs.FS` parameter
 - Project restructured to `cmd/internal` layout
   - Main package moved to `cmd/ascii-art/`
   - Internal packages moved to `internal/`
