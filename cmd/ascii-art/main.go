@@ -57,7 +57,7 @@ func main() {
 		os.Exit(exitCodeUsageError)
 	}
 
-	charMap, err := parser.LoadBanner(bannerPath)
+	charMap, err := parser.LoadBanner(GetBannerFS(), bannerPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading banner file: %v\n", err)
 		os.Exit(exitCodeBannerError)
