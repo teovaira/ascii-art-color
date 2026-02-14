@@ -28,15 +28,17 @@ ASCII Art Generator with ANSI Color Support - Convert text strings into ASCII ar
 git clone https://github.com/teovaira/ascii-art-color.git
 cd ascii-art-color
 
-# Build
+# Build (from repository root)
 make build
 # or: go build -o bin/ascii-art ./cmd/ascii-art
 
-# Run
+# Run (binary works from any directory)
 ./bin/ascii-art "Hello World" standard
 ```
 
 ## Usage
+
+> **Note**: The compiled binary (`./bin/ascii-art`) is fully relocatable and can be run from any directory. Development commands using `go run` must be executed from the `cmd/ascii-art` directory.
 
 ### Normal mode
 
