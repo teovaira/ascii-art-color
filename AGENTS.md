@@ -75,7 +75,7 @@ ascii-art-color/
     ├── flagparser/            # CLI argument validation
     │   ├── flagparser.go
     │   └── flagparser_test.go
-    ├── parser/                # Banner file parsing
+    ├── parser/                # Banner file parsing (from fs.FS)
     │   ├── banner_parser.go
     │   └── parser_test.go
     └── renderer/              # ASCII art rendering
@@ -372,7 +372,7 @@ for scanner.Scan() {
 - **color**: Parse color formats -> ANSI codes (named, hex, RGB)
 - **coloring**: Apply ANSI codes to ASCII art at correct positions
 - **flagparser**: Validate CLI argument **structure** only
-- **parser**: Load and parse banner files
+- **parser**: Load and parse banner files from embedded filesystem
 - **renderer**: Convert text to ASCII art
 - **main**: Orchestrate all packages
 
@@ -399,16 +399,16 @@ const (
 
 ### File Operations
 ```go
-// GOOD: Validate paths before use
-func LoadBanner(name string) error {
+// GOOD: Use embedded filesystem with validated paths
+func LoadBanner(fsys fs.FS, name string) error {
     allowed := map[string]bool{
         "standard": true, "shadow": true, "thinkertoy": true,
     }
     if !allowed[name] {
         return fmt.Errorf("invalid banner: %s", name)
     }
-    // #nosec G304 -- name validated against allowlist
-    data, err := os.ReadFile(filepath.Join("testdata", name+".txt"))
+    path := filepath.Join("testdata", name+".txt")
+    data, err := fs.ReadFile(fsys, path)
 }
 
 // BAD: User input directly to file path
@@ -488,10 +488,11 @@ Workflows are defined in `.github/workflows/`:
 
 ### Adding a New Banner Style
 1. Add banner file to `cmd/ascii-art/testdata/<name>.txt`
-2. Update `GetBannerPath()` in `cmd/ascii-art/main.go` to recognize new name
-3. Add integration test in `cmd/ascii-art/integration_test.go`
-4. Update README.md with new banner style
-5. Update CHANGELOG.md
+2. Update `bannerPaths` map in `cmd/ascii-art/banner.go` to recognize new name
+3. Rebuild binary (files are embedded at compile time)
+4. Add integration test in `cmd/ascii-art/integration_test.go`
+5. Update README.md with new banner style
+6. Update CHANGELOG.md
 
 ### Adding a Feature
 1. Discuss approach (architectural decision)
