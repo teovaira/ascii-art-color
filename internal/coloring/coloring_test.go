@@ -1,9 +1,10 @@
 package coloring_test
 
 import (
-	"ascii-art-color/internal/coloring"
 	"strings"
 	"testing"
+
+	"ascii-art-color/internal/coloring"
 )
 
 func TestApplyColor_AdvancedCases(t *testing.T) {

@@ -1,12 +1,9 @@
-// Package flagparser_test contains unit tests for the flagparser package.
-//
-// These tests verify that ParseArgs correctly validates command-line argument
-// structure: argument count, flag syntax, flag position, and empty values.
 package flagparser_test
 
 import (
-	"ascii-art-color/internal/flagparser"
 	"testing"
+
+	"ascii-art-color/internal/flagparser"
 )
 
 func TestParseArgs(t *testing.T) {
