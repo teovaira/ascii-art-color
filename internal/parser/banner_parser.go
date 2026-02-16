@@ -5,7 +5,7 @@
 // character definition plus 1 separator line, totaling 855 lines for 95 characters.
 //
 // Responsibilities of this package:
-//   - Read banner files from disk
+//   - Read banner files from the provided filesystem
 //   - Validate banner file format
 //   - Parse character definitions into usable data structures
 //
