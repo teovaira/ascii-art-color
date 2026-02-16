@@ -41,7 +41,7 @@ flowchart LR
 | CLI | `main` | Orchestrates all packages, handles I/O |
 | Input | `flagparser` | Validates CLI argument structure |
 | Input | `color` | Parses color specs (named, hex, RGB) into RGB values |
-| Core | `parser` | Reads banner files from embedded FS, builds character maps |
+| Core | `parser` | Reads banner files from provided filesystem, builds character maps |
 | Core | `renderer` | Converts text to ASCII art using banner maps |
 | Output | `coloring` | Applies ANSI color codes to rendered ASCII art |
 
