@@ -4,33 +4,33 @@ Execution flow from CLI input to ASCII art output. The program has two modes: **
 
 ```mermaid
 flowchart TD
-    A["CLI Arguments\\nos.Args"] --> B{"hasColorFlag?\n--color= prefix"}
+    A["CLI Arguments<br>os.Args"] --> B{"hasColorFlag?<br>--color= prefix"}
 
-    B -->|No| C["ParseArgs()\ntext, banner"]
-    B -->|Yes| D["flagparser.ParseArgs()\nvalidate syntax"]
+    B -->|No| C["ParseArgs()<br>text, banner"]
+    B -->|Yes| D["flagparser.ParseArgs()<br>validate syntax"]
 
-    C --> E["GetBannerPath()\nbanner file path"]
-    D --> F["extractColorArgs()\ncolorSpec, substring,\ntext, banner"]
+    C --> E["GetBannerPath()<br>banner file path"]
+    D --> F["extractColorArgs()<br>colorSpec, substring,<br>text, banner"]
 
-    E --> E2["GetBannerFS()\nembedded filesystem"]
-    E2 --> G["parser.LoadBanner(fsys, path)\nBanner map"]
-    F --> H["color.Parse()\nRGB struct"]
+    E --> E2["GetBannerFS()<br>embedded filesystem"]
+    E2 --> G["parser.LoadBanner(fsys, path)<br>Banner map"]
+    F --> H["color.Parse()<br>RGB struct"]
 
-    H --> I["GetBannerPath()\nbanner file path"]
-    I --> I2["GetBannerFS()\nembedded filesystem"]
-    I2 --> J["parser.LoadBanner(fsys, path)\nBanner map"]
-    J --> K["color.ANSI()\nANSI escape code"]
+    H --> I["GetBannerPath()<br>banner file path"]
+    I --> I2["GetBannerFS()<br>embedded filesystem"]
+    I2 --> J["parser.LoadBanner(fsys, path)<br>Banner map"]
+    J --> K["color.ANSI()<br>ANSI escape code"]
 
-    G --> L["renderer.ASCII()\nASCII art string"]
-    L --> M["fmt.Print()\nstdout"]
+    G --> L["renderer.ASCII()<br>ASCII art string"]
+    L --> M["fmt.Print()<br>stdout"]
 
     K --> N["For each line in text"]
-    N --> O["renderer.ASCII()\nASCII art lines"]
-    O --> P["parser.CharWidths()\ncharacter widths"]
-    P --> Q["coloring.ApplyColor()\ncolored ASCII art"]
+    N --> O["renderer.ASCII()<br>ASCII art lines"]
+    O --> P["parser.CharWidths()<br>character widths"]
+    P --> Q["coloring.ApplyColor()<br>colored ASCII art"]
     Q --> R{"More lines?"}
     R -->|Yes| N
-    R -->|No| S["fmt.Print()\nstdout"]
+    R -->|No| S["fmt.Print()<br>stdout"]
 
     style B fill:#f39c12,color:#fff
     style R fill:#f39c12,color:#fff
